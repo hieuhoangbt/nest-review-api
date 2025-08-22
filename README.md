@@ -21,9 +21,27 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
+# Nest Review API
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
+## Database Configuration
+
+This project uses environment variables for database configuration.  
+To update the database connection settings, edit the `.env` file in the project root:
+
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=nestuser
+DB_PASSWORD=password123
+DB_DATABASE=nest_review_api
+```
+
+- Change these values to match your PostgreSQL setup.
+- The application will automatically use these settings on startup.
 
 ## Project setup
 
