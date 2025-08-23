@@ -117,3 +117,119 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Hướng dẫn sử dụng GraphQL
+
+Sau khi chạy ứng dụng, bạn có thể truy cập playground tại [http://localhost:3000/graphql](http://localhost:3000/graphql).
+
+### Ví dụ Query lấy danh sách flashcard
+
+```graphql
+query {
+  flashcards {
+    id
+    question
+    answer
+    userId
+    user {
+      id
+      username
+    }
+  }
+}
+```
+
+### Ví dụ Mutation đăng ký tài khoản
+
+```graphql
+mutation {
+  register(username: "testuser", password: "strongpassword")
+}
+```
+
+### Ví dụ Mutation đăng nhập
+
+```graphql
+mutation {
+  login(username: "testuser", password: "strongpassword")
+}
+```
+
+### Ví dụ Mutation tạo flashcard (yêu cầu đã đăng nhập)
+
+```graphql
+mutation {
+  createFlashcard(
+    question: "NestJS là gì?"
+    answer: "Một framework NodeJS mạnh mẽ dựa trên TypeScript."
+  ) {
+    id
+    question
+    answer
+    userId
+    user {
+      id
+      username
+    }
+  }
+}
+```
+
+> **Lưu ý:**  
+> - Với mutation cần xác thực, bạn phải gửi JWT token ở phần HTTP Headers:
+>   ```json
+>   {
+>     "Authorization": "Bearer <token>"
+>   }
+>   ```
+> - Trường `userId` sẽ tự động lấy từ token, không cần truyền vào mutation `createFlashcard`.
+> - Nếu muốn lấy thông tin user tạo flashcard, hãy query thêm trường `user { id username }`.
+
+### Lưu ý về ràng buộc dữ liệu giữa Flashcard và User
+
+- Khi tạo flashcard, hệ thống sẽ tự động gán user dựa trên thông tin lấy từ JWT token, đảm bảo mỗi flashcard luôn thuộc về một user hợp lệ.
+- Trường `userId` trong bảng flashcard là bắt buộc và phải tham chiếu tới một user tồn tại trong bảng user.
+- Nếu user bị xóa, các flashcard liên quan sẽ bị lỗi ràng buộc (foreign key) hoặc cần xử lý xóa cascade tuỳ cấu hình database.
+- Khi truy vấn flashcard, trường `user` sẽ trả về thông tin user nếu và chỉ nếu `userId` hợp lệ và tồn tại trong bảng user.
+
+> **Quan trọng:**  
+> - Không nên tạo flashcard mà không có user hợp lệ.
+> - Đảm bảo dữ liệu mẫu trong database luôn có user trước khi tạo flashcard liên kết.
+
+## Flashcard API
+
+### Update Flashcard (GraphQL)
+
+```graphql
+mutation {
+  updateFlashcard(id: "FLASHCARD_ID", question: "New question", answer: "New answer") {
+    id
+    question
+    answer
+    user {
+      id
+      username
+    }
+  }
+}
+```
+
+### Update Flashcard (REST API)
+
+- **Endpoint:** `PATCH /flashcards/:id`
+- **Body:**
+  ```json
+  {
+    "question": "New question",
+    "answer": "New answer"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "id": "FLASHCARD_ID",
+    "question": "New question",
+    "answer": "New answer",
+    "user": { ... }
+  }
+  ```

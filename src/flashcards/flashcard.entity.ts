@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { User } from '../users/user.entity';
 import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { Exclude } from 'class-transformer';
 
 @ObjectType()
 @Entity()
@@ -23,10 +24,12 @@ export class Flashcard {
   @Column()
   answer: string;
 
-  @ManyToOne(() => User)
+  @Field(() => User)
+  @ManyToOne(() => User, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @Column()
+  @Exclude()
+  @Column({ nullable: false })
   userId: string;
 }

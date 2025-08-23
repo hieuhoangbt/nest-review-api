@@ -1,18 +1,27 @@
 import {
+  Body,
   Controller,
   Get,
+  Param,
+  Patch,
   Post,
-  Body,
-  UseGuards,
   Request,
+  UseGuards,
 } from '@nestjs/common';
-import { FlashcardsService } from './flashcards.service';
-import { CreateFlashcardDto } from './create-flashcard.dto';
 import { AuthGuard } from '@nestjs/passport';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { GqlAuthGuard } from 'src/auth/gql-auth.guard';
+import { CreateFlashcardDto } from './create-flashcard.dto';
+import { Flashcard } from './flashcard.entity';
+import { FlashcardsService } from './flashcards.service';
 
 // Define a JwtAuthGuard class to use in the decorator
 class JwtAuthGuard extends AuthGuard('jwt') {}
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('flashcards')
 @Controller('flashcards')
@@ -33,5 +42,17 @@ export class FlashcardsController {
   ) {
     // req.user chứa thông tin user đã đăng nhập
     return this.flashcardsService.create(dto, req.user);
+  }
+
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update a flashcard' })
+  @ApiResponse({ status: 200, type: Flashcard })
+  @Patch(':id')
+  @UseGuards(GqlAuthGuard)
+  async updateFlashcard(
+    @Param('id') id: string,
+    @Body() body: Partial<Flashcard>,
+  ): Promise<Flashcard | null> {
+    return this.flashcardsService.update(id, body);
   }
 }
