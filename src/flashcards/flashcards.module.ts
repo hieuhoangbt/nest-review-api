@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
-import { FlashcardsController } from './flashcards.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Flashcard } from './flashcard.entity';
 import { FlashcardsService } from './flashcards.service';
+import { FlashcardsController } from './flashcards.controller';
+import { FlashcardsResolver } from './flashcards.resolver';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([Flashcard])],
+  providers: [FlashcardsService, FlashcardsResolver],
   controllers: [FlashcardsController],
-  providers: [FlashcardsService],
 })
 export class FlashcardsModule {}

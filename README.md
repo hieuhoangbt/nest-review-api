@@ -27,10 +27,10 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Database Configuration
+## Database & JWT Configuration
 
-This project uses environment variables for database configuration.  
-To update the database connection settings, edit the `.env` file in the project root:
+Dự án sử dụng biến môi trường để cấu hình database và JWT.  
+Để cập nhật cấu hình, chỉnh sửa file `.env` ở thư mục gốc:
 
 ```env
 DB_HOST=localhost
@@ -38,10 +38,11 @@ DB_PORT=5432
 DB_USERNAME=nestuser
 DB_PASSWORD=password123
 DB_DATABASE=nest_review_api
+JWT_SECRET=your_jwt_secret
 ```
 
-- Change these values to match your PostgreSQL setup.
-- The application will automatically use these settings on startup.
+- Thay đổi các giá trị cho phù hợp với môi trường của bạn.
+- `JWT_SECRET` là chuỗi bí mật dùng để ký và xác thực JWT.
 
 ## Project setup
 
@@ -76,6 +77,8 @@ $ yarn run test:cov
 ```
 
 ## Deployment
+
+Khi triển khai production, hãy đảm bảo cấu hình `.env` phù hợp và bảo mật biến `JWT_SECRET`.
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
 

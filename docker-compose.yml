@@ -1,4 +1,4 @@
-version: '3.8'
+
 services:
   postgres:
     image: postgres:16
@@ -8,20 +8,11 @@ services:
       POSTGRES_USER: nestuser
       POSTGRES_PASSWORD: password123
       POSTGRES_DB: nest_review_api
+      TZ: Asia/Ho_Chi_Minh
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin123
-    ports:
-      - "8080:80"
-
 volumes:
-  postgres_data:
+  postgres_data: 
